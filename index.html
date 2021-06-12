@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Websockets TEST</title>
+</head>
+<body>
+<div class="message"></div>
+<label>
+    <textarea placeholder="Для отправки нажмите Enter"></textarea>
+</label>
+<script>
+   const socket = new WebSocket("ws://localhost:8001");
+      socket.onopen = function(){
+
+        document.querySelector("textarea").addEventListener('keyup', function(e){
+          if(e.keyCode === 13){
+            if(this.value.trim() === ""){
+              return false;
+            }
+            socket.send(this.value.trim());
+            this.value = "";
+          }
+
+        });
+
+      };
+      socket.onerror = function(){
+        console.log('Ошибка при подключении');
+      };
+
+    let p = "";
+      socket.onmessage = function(e){
+        p = document.createElement("p");
+        p.innerHTML = e.data;
+        document.querySelector(".message").appendChild(p);
+      };
+</script>
+</body>
+</html>
